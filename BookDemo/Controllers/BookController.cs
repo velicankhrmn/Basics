@@ -72,5 +72,31 @@ namespace BookDemo.Controllers
                 throw;
             }
         }
+
+        [HttpPut("{id:int}")]
+        public IActionResult UpdateBook([FromRoute(Name = "id")] int id, [FromBody] Book book)
+        {
+            //if (!ApplicationContext.Books.Any(b => b.Id == id))
+            //    return BadRequest();
+
+            
+
+            var entity = ApplicationContext.Books.Find(b => b.Id.Equals(id));
+
+            if (entity is null)
+                return NoContent();
+
+            //Check id is correct or not.
+            if (id != book.Id)
+                return BadRequest("Entered book id is not equal to the given id");
+
+            for (int i = 0; i < ApplicationContext.Books.Count; i++)
+            {
+                if (ApplicationContext.Books[i].Id == id)
+                    ApplicationContext.Books[i] = book;
+            }
+
+            return Ok(ApplicationContext.Books);
+        }
     }
 }
