@@ -44,7 +44,7 @@ namespace BookDemo.Controllers
             var book = ApplicationContext.Books.Where(b => b.Title.Equals(title)).SingleOrDefault();
 
             if (book is null)
-                return NotFound();
+                return NoContent();
 
             return Ok(book);
         }
