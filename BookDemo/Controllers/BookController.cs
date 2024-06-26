@@ -1,4 +1,5 @@
 ﻿using BookDemo.Data;
+using BookDemo.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -47,6 +48,29 @@ namespace BookDemo.Controllers
                 return NoContent();
 
             return Ok(book);
+        }
+
+        [HttpPost]
+        public IActionResult AddBook(Book book)
+        {
+            try
+            {
+                if (book == null)
+                    return BadRequest();
+
+                //Check if the book is already added.
+                if ((ApplicationContext.Books.Where(b => b.Id.Equals(book.Id)).SingleOrDefault() is not null)
+                    || (ApplicationContext.Books.Where(b => b.Id.Equals(book)).SingleOrDefault() is not null))
+                    return BadRequest();
+
+                ApplicationContext.Books.Add(book);
+                return StatusCode(201,book);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }
